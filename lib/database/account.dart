@@ -13,8 +13,5 @@ class Account {
   @HiveField(2)
   final String password;
 
-  @HiveField(3)
-  final bool isEditing;
-
-  Account(this.title, this.name, this.password, this.isEditing);
+  Account(this.title, this.name, this.password);
 }

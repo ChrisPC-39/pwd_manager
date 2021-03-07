@@ -1,24 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:pwd_manager/database/account.dart';
+import 'package:pwd_manager/database/edit.dart';
+import '../main.dart' as main;
 
-import '../database/account.dart';
-import '../logic.dart' as logic;
-
-class AddScreen extends StatefulWidget {
+class EditScreen extends StatefulWidget {
   final titleController = TextEditingController();
   final accountController = TextEditingController();
   final pwdController = TextEditingController();
 
-  final Account account;
-
-  AddScreen({this.account});
-
   @override
-  State<StatefulWidget> createState() => _AddScreenState();
+  State<StatefulWidget> createState() => _EditScreenState();
 }
 
-class _AddScreenState extends State<AddScreen> {
+class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
+    fillFields();
+
     return Column(
       children: [
         _buildAddButton(),
@@ -27,6 +25,13 @@ class _AddScreenState extends State<AddScreen> {
         _buildInput(widget.pwdController, "Password"),
       ]
     );
+  }
+
+  void fillFields() {
+    final editAcc = main.boxList[1].getAt(0) as Edit;
+    widget.titleController.text = editAcc.title;
+    widget.accountController.text = editAcc.name;
+    widget.pwdController.text = editAcc.password;
   }
 
   void clearFields() {
@@ -38,18 +43,20 @@ class _AddScreenState extends State<AddScreen> {
   Widget _buildAddButton() {
     return GestureDetector(
       onTap: () {
-        logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+        final editAcc = main.boxList[1].getAt(0) as Edit;
+        main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+        main.boxList[1].putAt(0, Edit("", "", "", false, 0));
         clearFields();
       },
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.green[400]),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-        child: Row(
+      child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Add", style: TextStyle(color: Colors.white)),
-            Icon(Icons.add_rounded, color: Colors.white)
+            Text("Update", style: TextStyle(color: Colors.white)),
+            Icon(Icons.update_rounded, color: Colors.white)
           ]
         )
       )
@@ -64,15 +71,16 @@ class _AddScreenState extends State<AddScreen> {
       child: TextField(
         controller: controller,
         onSubmitted: (value) {
-          logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+          final editAcc = main.boxList[1].getAt(0) as Edit;
+          main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+          main.boxList[1].putAt(0, Edit("", "", "", false, 0));
           clearFields();
         },
         decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[100],
-            enabledBorder: _outlineBorder(),
-            focusedBorder: _outlineBorder(),
-            hintText: hintText
+          filled: true,
+          fillColor: Colors.grey[100],
+          enabledBorder: _outlineBorder(),
+          focusedBorder: _outlineBorder(),
         )
       )
     );
