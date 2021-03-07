@@ -1,6 +1,6 @@
-# pwd_manager
+# Offline passowrd manager for Windows
 
-A new Flutter application.
+A local password manager for Windows. Avoid keeping your passwords online for your safety!
 
 ## Getting Started
 
