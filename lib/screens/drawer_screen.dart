@@ -15,7 +15,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
           _buildTile(Icon(Icons.home_rounded), Text("PLACEHOLDER")),
           _buildTile(Icon(Icons.ac_unit), Text("PLACEHOLDER"))
         ]
-      ),
+      )
     );
   }
 
