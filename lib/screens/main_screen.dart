@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:focused_menu/focused_menu.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pwd_manager/database/edit.dart';
@@ -153,31 +155,49 @@ class _MainScreenState extends State<MainScreen> {
   Widget _buildContainer(int i) {
     final account = Hive.box('accounts').getAt(i) as Account;
 
-    return MouseRegion(
+    return FocusedMenuHolder(
+      menuWidth: MediaQuery.of(context).size.width * 0.34,
+      onPressed: () {},
       key: UniqueKey(),
-      onHover: (event) { setState(() {
-        isHovering = true;
-        hoverIndex = i;
-      }); },
-      onExit: (event) { setState(() {
-        isHovering = false;
-        hoverIndex = -1;
-        censor = true;
-      }); },
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey[300]),
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-        child: Column(
-          children: [
-            _buildTitleRow(account, i),
-            Divider(thickness: 1),
-            _buildNameRow(account, i),
-            Divider(thickness: 1),
-            _buildPwdRow(account, i)
-          ]
+      menuItems: [
+        FocusedMenuItem(
+          title: Text("Edit", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold)),
+          trailingIcon: Icon(Icons.edit_rounded, color: Colors.grey[800]),
+          onPressed: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i))
+        ),
+
+        FocusedMenuItem(
+          title: Text("Delete", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+          trailingIcon: Icon(Icons.delete_rounded, color: Colors.white),
+          backgroundColor: Colors.red[400],
+          onPressed: () => Hive.box('accounts').deleteAt(i),
         )
-      )
+      ],
+      child: MouseRegion(
+        onHover: (event) { setState(() {
+          isHovering = true;
+          hoverIndex = i;
+        }); },
+        onExit: (event) { setState(() {
+          isHovering = false;
+          hoverIndex = -1;
+          censor = true;
+        }); },
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey[300]),
+          padding: EdgeInsets.all(10),
+          margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+          child: Column(
+            children: [
+              _buildTitleRow(account, i),
+              Divider(thickness: 1),
+              _buildNameRow(account, i),
+              Divider(thickness: 1),
+              _buildPwdRow(account, i)
+            ]
+          )
+        )
+      ),
     );
   }
 }

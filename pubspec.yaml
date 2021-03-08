@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  focused_menu: ^1.0.4
 
 dev_dependencies:
   flutter_test:
