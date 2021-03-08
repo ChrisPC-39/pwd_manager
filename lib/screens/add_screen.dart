@@ -19,15 +19,16 @@ class AddScreen extends StatefulWidget {
 class _AddScreenState extends State<AddScreen> {
   int colorCode = 0xFF66BB6A;
   int index = 0;
+  int hoverIndex = -1;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
         _buildAddButton(),
-        _buildInput(widget.titleController, "Title"),
-        _buildInput(widget.accountController, "Username"),
-        _buildInput(widget.pwdController, "Password"),
+        _buildInput(widget.titleController, "Title", 0),
+        _buildInput(widget.accountController, "Username", 1),
+        _buildInput(widget.pwdController, "Password", 2),
         _buildColorPicker()
       ]
     );
@@ -50,6 +51,16 @@ class _AddScreenState extends State<AddScreen> {
       case "Password":
         widget.pwdController.text = "";
         break;
+      default:
+        break;
+    }
+  }
+
+  int findIndividualField(String text) {
+    switch(text) {
+      case "Title": return 0;
+      case "Username": return 1;
+      case "Password": return 2;
       default:
         break;
     }
@@ -111,7 +122,7 @@ class _AddScreenState extends State<AddScreen> {
     );
   }
 
-  Widget _buildInput(TextEditingController controller, String hintText) {
+  Widget _buildInput(TextEditingController controller, String hintText, int i) {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -135,9 +146,21 @@ class _AddScreenState extends State<AddScreen> {
             )
           ),
 
-          GestureDetector(
-            onTap: () => clearIndividualField(hintText),
-            child: Icon(Icons.cancel_rounded, color: Colors.grey),
+          MouseRegion(
+            onHover: (event) {
+              setState(() {
+                hoverIndex = findIndividualField(hintText);
+              });
+            },
+            onExit: (event) {
+              setState(() {
+                hoverIndex = -1;
+              });
+            },
+            child: GestureDetector(
+              onTap: () => clearIndividualField(hintText),
+              child: Icon(Icons.cancel_rounded, color: hoverIndex == i ? Colors.grey[700] : Colors.grey),
+            )
           )
         ]
       )

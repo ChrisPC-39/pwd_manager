@@ -17,6 +17,7 @@ class _EditScreenState extends State<EditScreen> {
   int colorCode = 0xFF66BB6A;
   int index = 0;
   bool indexSet = false;
+  int hoverIndex = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +26,9 @@ class _EditScreenState extends State<EditScreen> {
     return Column(
       children: [
         _buildAddButton(),
-        _buildInput(widget.titleController, "Title"),
-        _buildInput(widget.accountController, "Username"),
-        _buildInput(widget.pwdController, "Password"),
+        _buildInput(widget.titleController, "Title", 0),
+        _buildInput(widget.accountController, "Username", 1),
+        _buildInput(widget.pwdController, "Password", 2),
         _buildColorPicker()
       ]
     );
@@ -75,7 +76,7 @@ class _EditScreenState extends State<EditScreen> {
     return Flexible(
       child: GestureDetector(
         onTap: () => setState(() { index = i; colorCode = code; }),
-        child: Container(
+        child:  Container(
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: color),
           margin: EdgeInsets.only(right: 2),
           width: 50,
@@ -135,7 +136,7 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  Widget _buildInput(TextEditingController controller, String hintText) {
+  Widget _buildInput(TextEditingController controller, String hintText, int i) {
     return Container(
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -160,9 +161,21 @@ class _EditScreenState extends State<EditScreen> {
             )
           ),
 
-          GestureDetector(
-            onTap: () => clearIndividualField(hintText),
-            child: Icon(Icons.cancel_rounded, color: Colors.grey),
+          MouseRegion(
+            onHover: (event) {
+              setState(() {
+                hoverIndex = findIndividualField(hintText);
+              });
+            },
+            onExit: (event) {
+              setState(() {
+                hoverIndex = -1;
+              });
+            },
+            child: GestureDetector(
+              onTap: () => clearIndividualField(hintText),
+              child: Icon(Icons.cancel_rounded, color: hoverIndex == i ? Colors.grey[700] : Colors.grey),
+            )
           )
         ]
       )
@@ -187,6 +200,16 @@ class _EditScreenState extends State<EditScreen> {
       case "Password":
         widget.pwdController.text = "";
         break;
+      default:
+        break;
+    }
+  }
+
+  int findIndividualField(String text) {
+    switch(text) {
+      case "Title": return 0;
+      case "Username": return 1;
+      case "Password": return 2;
       default:
         break;
     }
