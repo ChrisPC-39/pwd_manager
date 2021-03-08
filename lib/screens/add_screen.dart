@@ -34,37 +34,6 @@ class _AddScreenState extends State<AddScreen> {
     );
   }
 
-  void clearFields() {
-    widget.titleController.text = "";
-    widget.accountController.text = "";
-    widget.pwdController.text = "";
-  }
-
-  void clearIndividualField(String text) {
-    switch(text) {
-      case "Title":
-        widget.titleController.text = "";
-        break;
-      case "Username":
-        widget.accountController.text = "";
-        break;
-      case "Password":
-        widget.pwdController.text = "";
-        break;
-      default:
-        break;
-    }
-  }
-
-  int findIndividualField(String text) {
-    switch(text) {
-      case "Title": return 0;
-      case "Username": return 1;
-      case "Password": return 2;
-      default: return 0;
-    }
-  }
-
   Widget _buildColorPicker() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -149,14 +118,10 @@ class _AddScreenState extends State<AddScreen> {
 
           MouseRegion(
             onHover: (event) {
-              setState(() {
-                hoverIndex = findIndividualField(hintText);
-              });
+              setState(() { hoverIndex = findIndividualField(hintText); });
             },
             onExit: (event) {
-              setState(() {
-                hoverIndex = -1;
-              });
+              setState(() { hoverIndex = -1; });
             },
             child: Container(
               margin: EdgeInsets.only(left: 5),
@@ -176,5 +141,36 @@ class _AddScreenState extends State<AddScreen> {
       borderSide: BorderSide(color: Colors.transparent),
       borderRadius: BorderRadius.all(Radius.circular(10)),
     );
+  }
+
+  void clearFields() {
+    widget.titleController.text = "";
+    widget.accountController.text = "";
+    widget.pwdController.text = "";
+  }
+
+  void clearIndividualField(String text) {
+    switch(text) {
+      case "Title":
+        widget.titleController.text = "";
+        break;
+      case "Username":
+        widget.accountController.text = "";
+        break;
+      case "Password":
+        widget.pwdController.text = "";
+        break;
+      default:
+        break;
+    }
+  }
+
+  int findIndividualField(String text) {
+    switch(text) {
+      case "Title": return 0;
+      case "Username": return 1;
+      case "Password": return 2;
+      default: return 0;
+    }
   }
 }
