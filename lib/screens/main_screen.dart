@@ -18,28 +18,12 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
   TextEditingController titleController = TextEditingController();
-  FocusNode focusNode = FocusNode();
   bool isHovering = false;
   bool copyName = false;
   bool copyPwd = false;
-  bool censor = true;
   int hoverIndex = -1;
   int copyIndex = -1;
   String input = "";
-
-  @override
-  void initState() {
-    focusNode = FocusNode();
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    focusNode.dispose();
-
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,19 +33,6 @@ class _MainScreenState extends State<MainScreen> {
         _buildListView()
       ]
     );
-  }
-
-  void copyToClipboard(String text, int i, bool isPwd) {
-    Clipboard.setData(new ClipboardData(text: text));
-
-    setState(() {
-      isPwd ? copyPwd = true : copyName = true;
-      copyIndex = i;
-    });
-    Future.delayed(Duration(seconds: 1), () {
-      isPwd ? copyPwd = false : copyName = false;
-      copyIndex = -1;
-    });
   }
 
   Widget _buildListView() {
@@ -78,19 +49,12 @@ class _MainScreenState extends State<MainScreen> {
             itemBuilder: (context, index) {
               final account = accBox.getAt(index) as Account;
               return !account.title.toLowerCase().contains(input)
-                 ? Container()
-                 : _buildContainer(index);
+                ? Container()
+                : _buildContainer(index);
             }
           )
         );
       }
-    );
-  }
-
-  OutlineInputBorder _outlineBorder() {
-    return OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.transparent),
-      borderRadius: BorderRadius.all(Radius.circular(10)),
     );
   }
 
@@ -123,7 +87,7 @@ class _MainScreenState extends State<MainScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: SelectableText(account.title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+        Flexible(child: SelectableText(account.title, style: _textStyle(fontSize: 20, fontWeight: FontWeight.bold))),
         _buildMenu(i, account)
       ]
     );
@@ -134,13 +98,6 @@ class _MainScreenState extends State<MainScreen> {
       visible: isHovering && hoverIndex == i,
       child: Row(
         children: [
-          // GestureDetector(
-          //   onTap: () => setState(() { censor = !censor; }),
-          //   child: Icon(censor ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: Colors.grey[800])
-          // ),
-
-          // Container(width: 10),
-
           GestureDetector(
             onTap: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode)),
             child: Icon(Icons.edit_rounded, color: Colors.grey[800])
@@ -162,44 +119,34 @@ class _MainScreenState extends State<MainScreen> {
 
   //The following 2 functions are completely cursed.
   Widget _buildNameRow(Account account, int i) {
-    // String censoredText = "";
-    // for(int i = 0; i < account.name.length; i++)
-    //   censoredText += "*";
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        //censor || hoverIndex != i
-        //? Text(censoredText, style: TextStyle(fontSize: 18))
-        Flexible(child: SelectableText(account.name, style: TextStyle(fontSize: 18))),
+      Flexible(child: SelectableText(account.name, style: _textStyle(fontSize: 18, fontWeight: FontWeight.normal))),
 
-        GestureDetector(
-          onTap: () => copyToClipboard(account.name, i, false),
-          child: copyIndex == i && copyName
-            ? Text("Copied!", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold, fontStyle: FontStyle.italic))
-            : Icon(Icons.copy_rounded, color: Colors.grey[800])
+      //COPY BUTTON
+      GestureDetector(
+        onTap: () => copyToClipboard(account.name, i, false),
+        child: copyIndex == i && copyName
+          ? Text("Copied!", style: _textStyle(color: Colors.grey[800], fontStyle: FontStyle.italic, fontSize: 10))
+          : Icon(Icons.copy_rounded, color: Colors.grey[800])
         )
       ]
     );
   }
 
   Widget _buildPwdRow(Account account, int i) {
-    // String censoredText = "";
-    // for(int i = 0; i < account.password.length; i++)
-    //   censoredText += "*";
-
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        //censor || hoverIndex != i
-        //? Text(censoredText, style: TextStyle(fontSize: 18))
-        Flexible(child: SelectableText(account.password, style: TextStyle(fontSize: 18))),
+      Flexible(child: SelectableText(account.password, style: TextStyle(fontSize: 18))),
 
-        GestureDetector(
-          onTap: () => copyToClipboard(account.password, i, true),
-          child: copyPwd == true && copyIndex == i
-            ? Text("Copied!", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold, fontStyle: FontStyle.italic))
-            : Icon(Icons.copy_rounded, color: Colors.grey[800])
+      //COPY BUTTON
+      GestureDetector(
+        onTap: () => copyToClipboard(account.password, i, true),
+        child: copyIndex == i && copyPwd
+          ? Text("Copied!", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold, fontStyle: FontStyle.italic))
+          : Icon(Icons.copy_rounded, color: Colors.grey[800])
         )
       ]
     );
@@ -212,32 +159,12 @@ class _MainScreenState extends State<MainScreen> {
       menuWidth: MediaQuery.of(context).size.width * 0.34,
       onPressed: () {},
       key: UniqueKey(),
-      menuItems: [
-        FocusedMenuItem(
-          title: Text("Edit", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold)),
-          trailingIcon: Icon(Icons.edit_rounded, color: Colors.grey[800]),
-          onPressed: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode))
-        ),
-
-        FocusedMenuItem(
-          title: Text("Delete", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-          trailingIcon: Icon(Icons.delete_rounded, color: Colors.white),
-          backgroundColor: Colors.red[400],
-          onPressed: () => Hive.box('accounts').deleteAt(i),
-        )
-      ],
+      menuItems: _buildFocusedMenuItemList(account, i),
       child: MouseRegion(
-        onHover: (event) { setState(() {
-          isHovering = true;
-          hoverIndex = i;
-        }); },
-        onExit: (event) { setState(() {
-          isHovering = false;
-          hoverIndex = -1;
-          censor = true;
-        }); },
+        onHover: (event) { _buildOnHover(i); },
+        onExit: (event) { _buildOnExit(); },
         child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(account.colorCode)),
+          decoration: _buildBoxDecoration(10, account.colorCode),
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
           child: Column(
@@ -250,7 +177,84 @@ class _MainScreenState extends State<MainScreen> {
             ]
           )
         )
-      ),
+      )
     );
+  }
+
+  BoxDecoration _buildBoxDecoration(double radius, int color) {
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(radius),
+      color: Color(color)
+    );
+  }
+
+  List<FocusedMenuItem> _buildFocusedMenuItemList(Account account, int i) {
+    return [
+      _buildFocusedMenuItem(
+        Text("Edit", style: _textStyle(color: Colors.grey[800])),
+        Icon(Icons.edit_rounded, color: Colors.grey[800]),
+        () { main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode)); },
+        Colors.white
+      ),
+
+      _buildFocusedMenuItem(
+        Text("Delete", style: _textStyle(color: Colors.white)),
+        Icon(Icons.delete_rounded, color: Colors.white),
+        () { Hive.box('accounts').deleteAt(i); },
+        Colors.red[400]
+      )
+    ];
+  }
+
+  FocusedMenuItem _buildFocusedMenuItem(Widget title, Icon icon, void onPressed(), Color background) {
+    return FocusedMenuItem(
+      title: title,
+      trailingIcon:icon,
+      onPressed: () => onPressed(),
+      backgroundColor: background
+    );
+  }
+
+  TextStyle _textStyle({Color color = Colors.black, FontWeight fontWeight = FontWeight.bold, FontStyle fontStyle = FontStyle.normal,  double fontSize = 20}) {
+    return TextStyle(
+      color: color,
+      fontWeight: fontWeight,
+      fontStyle: fontStyle,
+      fontSize: fontSize
+    );
+  }
+
+  OutlineInputBorder _outlineBorder() {
+    return OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+    );
+  }
+
+  void copyToClipboard(String text, int i, bool isPwd) {
+    Clipboard.setData(new ClipboardData(text: text));
+
+    setState(() {
+      isPwd ? copyPwd = true : copyName = true;
+      copyIndex = i;
+    });
+    Future.delayed(Duration(seconds: 1), () {
+      isPwd ? copyPwd = false : copyName = false;
+      copyIndex = -1;
+    });
+  }
+
+  void _buildOnHover(int i) {
+    setState(() {
+      isHovering = true;
+      hoverIndex = i;
+    });
+  }
+
+  void _buildOnExit() {
+    setState(() {
+      isHovering = false;
+      hoverIndex = -1;
+    });
   }
 }
