@@ -28,7 +28,7 @@ class _EditScreenState extends State<EditScreen> {
     setState(() { copyName = widget.titleController.text; });
 
     return Flexible(
-      flex: 2,
+      flex: 3,
       child: Column(
         children: [
           _buildAddButton(),

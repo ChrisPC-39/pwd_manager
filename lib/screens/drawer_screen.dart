@@ -131,7 +131,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       context: context,
       applicationIcon: FlutterLogo(),
       applicationName: "Password Manager",
-      applicationVersion: '0.3.5',
+      applicationVersion: '0.3.6',
       applicationLegalese: "Enjoy offline storage for your valuable accounts!"
     );
   }
