@@ -53,11 +53,11 @@ class _MyAppState extends State<MyApp> {
                   body: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Expanded(flex: 1, child: DrawerScreen()),
-                      Expanded(flex: 2, child: MainScreen()),
+                      DrawerScreen(),
+                      MainScreen(),
                       edit.isEditing
-                        ? Expanded(flex: 3, child: EditScreen())
-                        : Expanded(flex: 3, child: AddScreen())
+                        ? Expanded(child: EditScreen())
+                        : AddScreen()
                     ]
                   )
                 )

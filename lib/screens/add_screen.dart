@@ -23,14 +23,17 @@ class _AddScreenState extends State<AddScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildAddButton(),
-        _buildInput(widget.titleController, "Title", 0),
-        _buildInput(widget.accountController, "Username", 1),
-        _buildInput(widget.pwdController, "Password", 2),
-        _buildColorPicker()
-      ]
+    return Flexible(
+      flex: 3,
+      child: Column(
+        children: [
+          _buildAddButton(),
+          _buildInput(widget.titleController, "Title", 0),
+          _buildInput(widget.accountController, "Username", 1),
+          _buildInput(widget.pwdController, "Password", 2),
+          _buildColorPicker()
+        ]
+      ),
     );
   }
 

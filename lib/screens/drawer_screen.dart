@@ -15,17 +15,24 @@ class _DrawerScreenState extends State<DrawerScreen> {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.green[400],
+      width: resizeDrawer.increaseDrawerSize ? 150 : 60,
       child: Column(
         children: [
           _buildTile(
+            Icon(Icons.menu),
+            Text(!resizeDrawer.increaseDrawerSize ? "" : "Drawer"),
+            () { resizeDrawer.increaseDrawerSize = !resizeDrawer.increaseDrawerSize; setState(() {});}
+          ),
+
+          _buildTile(
             Icon(Icons.delete_forever_rounded),
-            Text("Delete all"),
+            Text(!resizeDrawer.increaseDrawerSize ? "" : "Delete all"),
             () { _showDeleteDialog(context); }
           ),
 
           _buildTile(
             Icon(deleted.account.length == 0 ? Icons.do_not_disturb : Icons.undo_rounded),
-            Text(deleted.account.length == 0 ? "Nothing to undo" : "Undo"),
+            !resizeDrawer.increaseDrawerSize ? Text("") : Text(deleted.account.length == 0 ? "Nothing to undo" : "Undo"),
             () {
               for(int i = 0; i < deleted.account.length; i++)
                 logic.addAccount(deleted.account.elementAt(i));
@@ -36,7 +43,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
           _buildTile(
             Icon(reorder.isReordering == true ? Icons.check_rounded : Icons.repeat_rounded),
-            Text(reorder.isReordering == true ? "Done reordering" : "Reorder"),
+            !resizeDrawer.increaseDrawerSize ? Text("") : Text(reorder.isReordering == true ? "Done reordering" : "Reorder"),
             () {
               setState(() { reorder.isReordering = !reorder.isReordering; });
             }
@@ -44,13 +51,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
           _buildTile(
             Icon(Icons.file_copy_outlined),
-            Text("View licenses"),
+            Text(!resizeDrawer.increaseDrawerSize ? "" : "View licenses"),
             () { _showLicensesDialog(context); }
           ),
 
           _buildTile(
             Icon(Icons.info_outline_rounded),
-            Text("About"),
+            Text(!resizeDrawer.increaseDrawerSize ? "" : "About"),
             () { _showAboutDialog(context); }
           )
         ]

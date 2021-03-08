@@ -25,18 +25,19 @@ class _EditScreenState extends State<EditScreen> {
   @override
   Widget build(BuildContext context) {
     fillFields();
-    setState(() {
-      copyName = widget.titleController.text;
-    });
+    setState(() { copyName = widget.titleController.text; });
 
-    return Column(
-      children: [
-        _buildAddButton(),
-        _buildInput(widget.titleController, "Title", 0),
-        _buildInput(widget.accountController, "Username", 1),
-        _buildInput(widget.pwdController, "Password", 2),
-        _buildColorPicker()
-      ]
+    return Flexible(
+      flex: 2,
+      child: Column(
+        children: [
+          _buildAddButton(),
+          _buildInput(widget.titleController, "Title", 0),
+          _buildInput(widget.accountController, "Username", 1),
+          _buildInput(widget.pwdController, "Password", 2),
+          _buildColorPicker()
+        ]
+      ),
     );
   }
 

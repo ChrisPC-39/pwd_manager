@@ -29,11 +29,14 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildSearchBar(),
-        reorder.isReordering == true ? _buildReorderableList() : _buildListView()
-      ]
+    return Flexible(
+      flex: 2,
+      child: Column(
+        children: [
+          _buildSearchBar(),
+          reorder.isReordering == true ? _buildReorderableList() : _buildListView()
+        ]
+      ),
     );
   }
 
