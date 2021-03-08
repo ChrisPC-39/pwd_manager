@@ -35,6 +35,22 @@ class _AddScreenState extends State<AddScreen> {
     widget.pwdController.text = "";
   }
 
+  void clearIndividualField(String text) {
+    switch(text) {
+      case "Title":
+        widget.titleController.text = "";
+        break;
+      case "Username":
+        widget.accountController.text = "";
+        break;
+      case "Password":
+        widget.pwdController.text = "";
+        break;
+      default:
+        break;
+    }
+  }
+
   Widget _buildAddButton() {
     return GestureDetector(
       onTap: () {
@@ -61,19 +77,30 @@ class _AddScreenState extends State<AddScreen> {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: TextField(
-        controller: controller,
-        onSubmitted: (value) {
-          logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
-          clearFields();
-        },
-        decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[100],
-            enabledBorder: _outlineBorder(),
-            focusedBorder: _outlineBorder(),
-            hintText: hintText
-        )
+      child: Row(
+        children: [
+          Flexible(
+            child: TextField(
+              controller: controller,
+              onSubmitted: (value) {
+                logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+                clearFields();
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[100],
+                enabledBorder: _outlineBorder(),
+                focusedBorder: _outlineBorder(),
+                hintText: hintText
+              )
+            )
+          ),
+
+          GestureDetector(
+            onTap: () => clearIndividualField(hintText),
+            child: Icon(Icons.cancel_rounded, color: Colors.grey),
+          )
+        ]
       )
     );
   }

@@ -43,10 +43,13 @@ class _EditScreenState extends State<EditScreen> {
   Widget _buildAddButton() {
     return GestureDetector(
       onTap: () {
-        final editAcc = main.boxList[1].getAt(0) as Edit;
-        main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
-        main.boxList[1].putAt(0, Edit("", "", "", false, 0));
-        clearFields();
+        if(widget.titleController.text != "" && widget.accountController.text != "" && widget.pwdController.text != "") {
+          final editAcc = main.boxList[1].getAt(0) as Edit;
+          main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+          main.boxList[1].putAt(0, Edit("", "", "", false, 0));
+
+          clearFields();
+        } else main.boxList[1].putAt(0, Edit("", "", "", false, 0));
       },
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
@@ -68,20 +71,31 @@ class _EditScreenState extends State<EditScreen> {
       width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      child: TextField(
-        controller: controller,
-        onSubmitted: (value) {
-          final editAcc = main.boxList[1].getAt(0) as Edit;
-          main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
-          main.boxList[1].putAt(0, Edit("", "", "", false, 0));
-          clearFields();
-        },
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.grey[100],
-          enabledBorder: _outlineBorder(),
-          focusedBorder: _outlineBorder(),
-        )
+      child: Row(
+        children: [
+          Flexible(
+            child: TextField(
+              controller: controller,
+              onSubmitted: (value) {
+                final editAcc = main.boxList[1].getAt(0) as Edit;
+                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+                main.boxList[1].putAt(0, Edit("", "", "", false, 0));
+                clearFields();
+              },
+              decoration: InputDecoration(
+                filled: true,
+                fillColor: Colors.grey[100],
+                enabledBorder: _outlineBorder(),
+                focusedBorder: _outlineBorder(),
+              )
+            )
+          ),
+
+          GestureDetector(
+            onTap: () => clearIndividualField(hintText),
+            child: Icon(Icons.cancel_rounded, color: Colors.grey),
+          )
+        ]
       )
     );
   }
@@ -91,5 +105,21 @@ class _EditScreenState extends State<EditScreen> {
       borderSide: BorderSide(color: Colors.transparent),
       borderRadius: BorderRadius.all(Radius.circular(20)),
     );
+  }
+
+  void clearIndividualField(String text) {
+    switch(text) {
+      case "Title":
+        widget.titleController.text = "";
+        break;
+      case "Username":
+        widget.accountController.text = "";
+        break;
+      case "Password":
+        widget.pwdController.text = "";
+        break;
+      default:
+        break;
+    }
   }
 }
