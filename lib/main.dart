@@ -49,14 +49,15 @@ class _MyAppState extends State<MyApp> {
               final edit = boxList[1].getAt(0) as Edit;
               return SafeArea(
                 child: Scaffold(
+                  backgroundColor: Color(0xFFe0e0e0),
                   body: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       Expanded(flex: 1, child: DrawerScreen()),
                       Expanded(flex: 2, child: MainScreen()),
-                     edit.isEditing
-                     ? Expanded(flex: 3, child: EditScreen())
-                     : Expanded(flex: 3, child: AddScreen())
+                      edit.isEditing
+                        ? Expanded(flex: 3, child: EditScreen())
+                        : Expanded(flex: 3, child: AddScreen())
                     ]
                   )
                 )

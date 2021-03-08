@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pwd_manager/database/account.dart';
 import 'package:pwd_manager/database/edit.dart';
+import 'package:hive/hive.dart';
+
 import '../logic.dart' as logic;
 import '../main.dart' as main;
 
@@ -36,10 +38,10 @@ class _EditScreenState extends State<EditScreen> {
 
   void fillFields() {
     final editAcc = main.boxList[1].getAt(0) as Edit;
-    widget.titleController.text = editAcc.title;
-    widget.accountController.text = editAcc.name;
-    widget.pwdController.text = editAcc.password;
     if(!indexSet) {
+      widget.titleController.text = editAcc.title;
+      widget.accountController.text = editAcc.name;
+      widget.pwdController.text = editAcc.password;
       colorCode = editAcc.colorCode;
       index = logic.findIndex(editAcc.colorCode);
     }
@@ -60,7 +62,7 @@ class _EditScreenState extends State<EditScreen> {
         children: [
         _buildColorContainer(Colors.green[400], 0xFF66BB6A, 0),
         _buildColorContainer(Colors.red[400], 0xFFEF5350, 1),
-        _buildColorContainer(Colors.grey[300], 0xFFE0E0E0, 2),
+        _buildColorContainer(Colors.grey[400], 0xFFBDBDBD, 2),
         _buildColorContainer(Colors.blue[400], 0xFF42A5F5, 3),
         _buildColorContainer(Colors.blue[800], 0xFF1565C0, 4),
         _buildColorContainer(Colors.indigo[400], 0xFF5C6BC0, 5),
@@ -93,21 +95,26 @@ class _EditScreenState extends State<EditScreen> {
         Flexible(
           child: GestureDetector(
             onTap: () {
+              final editAcc = main.boxList[1].getAt(0) as Edit;
+              final account = Hive.box('accounts').getAt(editAcc.index) as Account;
+
               if(widget.titleController.text != "" && widget.accountController.text != "" && widget.pwdController.text != "") {
-                final editAcc = main.boxList[1].getAt(0) as Edit;
                 main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
                 main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
 
-              } else main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
+              } else {
+                main.boxList[0].putAt(editAcc.index, Account(account.title, account.name, account.password, false, colorCode));
+                main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
+              }
             },
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
               padding: EdgeInsets.all(10),
-              margin: EdgeInsets.fromLTRB(20, 5, 5, 5),
+              margin: EdgeInsets.fromLTRB(20, 20, 5, 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Update", style: TextStyle(color: Colors.white)),
+                  Text("Update", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   Icon(Icons.update_rounded, color: Colors.white)
                 ]
               )
@@ -121,11 +128,11 @@ class _EditScreenState extends State<EditScreen> {
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.red[400]),
               padding: EdgeInsets.all(10),
-              margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
+              margin: EdgeInsets.fromLTRB(5, 20, 10, 5),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Cancel", style: TextStyle(color: Colors.white)),
+                  Text("Cancel", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
                   Icon(Icons.cancel_rounded, color: Colors.white)
                 ]
               )
@@ -146,9 +153,12 @@ class _EditScreenState extends State<EditScreen> {
           Flexible(
             child: TextField(
               controller: controller,
+              onChanged: (value) {
+                if(value.contains("")) widget.titleController.text = "";
+              },
               onSubmitted: (value) {
                 final editAcc = main.boxList[1].getAt(0) as Edit;
-                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, 0xFFBDBDBD));
+                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
                 main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
                 clearFields();
               },
@@ -163,18 +173,17 @@ class _EditScreenState extends State<EditScreen> {
 
           MouseRegion(
             onHover: (event) {
-              setState(() {
-                hoverIndex = findIndividualField(hintText);
-              });
+              setState(() { hoverIndex = findIndividualField(hintText); });
             },
             onExit: (event) {
-              setState(() {
-                hoverIndex = -1;
-              });
+              setState(() { hoverIndex = -1; });
             },
-            child: GestureDetector(
-              onTap: () => clearIndividualField(hintText),
-              child: Icon(Icons.cancel_rounded, color: hoverIndex == i ? Colors.grey[700] : Colors.grey),
+            child: Container(
+              margin: EdgeInsets.only(left: 5),
+              child: GestureDetector(
+                onTap: () => clearIndividualField(hintText),
+                child: Icon(Icons.cancel_rounded, color: hoverIndex == i ? Colors.grey[700] : Colors.grey),
+              ),
             )
           )
         ]
@@ -185,7 +194,7 @@ class _EditScreenState extends State<EditScreen> {
   OutlineInputBorder _outlineBorder() {
     return OutlineInputBorder(
       borderSide: BorderSide(color: Colors.transparent),
-      borderRadius: BorderRadius.all(Radius.circular(20)),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
     );
   }
 
@@ -210,8 +219,7 @@ class _EditScreenState extends State<EditScreen> {
       case "Title": return 0;
       case "Username": return 1;
       case "Password": return 2;
-      default:
-        break;
+      default: return 0;
     }
   }
 }

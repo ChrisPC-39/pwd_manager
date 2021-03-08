@@ -8,7 +8,6 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pwd_manager/database/edit.dart';
 
 import '../database/account.dart';
-import '../logic.dart' as logic;
 import '../main.dart' as main;
 
 class MainScreen extends StatefulWidget {
@@ -18,22 +17,37 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final GlobalKey<AnimatedListState> listKey = GlobalKey<AnimatedListState>();
-  TextEditingController nameController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+  FocusNode focusNode = FocusNode();
   bool isHovering = false;
   bool copyName = false;
   bool copyPwd = false;
   bool censor = true;
   int hoverIndex = -1;
   int copyIndex = -1;
+  String input = "";
+
+  @override
+  void initState() {
+    focusNode = FocusNode();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          _buildListView()
-        ]
-      )
+    return Column(
+      children: [
+        _buildSearchBar(),
+        _buildListView()
+      ]
     );
   }
 
@@ -51,21 +65,57 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildListView() {
+    final accBox = Hive.box('accounts');
+
     return ValueListenableBuilder(
       valueListenable: Hive.box('accounts').listenable(),
       builder: (context, accountsBox, _) {
         return Flexible(
-          child: ReorderableListView(
+          child: ListView.builder(
             key: listKey,
-            onReorder: logic.reorderList,
             physics: BouncingScrollPhysics(),
-            children: [
-              for(int i = 0; i < Hive.box('accounts').length; i++)
-                _buildContainer(i)
-            ]
+            itemCount: Hive.box('accounts').length,
+            itemBuilder: (context, index) {
+              final account = accBox.getAt(index) as Account;
+              return !account.title.toLowerCase().contains(input)
+                 ? Container()
+                 : _buildContainer(index);
+            }
           )
         );
       }
+    );
+  }
+
+  OutlineInputBorder _outlineBorder() {
+    return OutlineInputBorder(
+      borderSide: BorderSide(color: Colors.transparent),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+    );
+  }
+
+  Widget _buildSearchBar() {
+    return Container(
+      margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      height: 45,
+      child: TextField(
+        enableSuggestions: true,
+        controller: titleController,
+        onChanged: (String value) {
+          if(value.contains("")) titleController.text = "";
+          setState(() { input = value.toLowerCase(); });
+        },
+        onSubmitted: (value) {},
+        decoration: InputDecoration(
+          filled: true,
+          fillColor: Colors.grey[100],
+          enabledBorder: _outlineBorder(),
+          focusedBorder: _outlineBorder(),
+          hintText: "Search for an account",
+          prefixIcon: Icon(Icons.search_rounded, color: Colors.grey),
+        )
+      )
     );
   }
 
@@ -73,7 +123,7 @@ class _MainScreenState extends State<MainScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        SelectableText(account.title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+        Flexible(child: SelectableText(account.title, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold))),
         _buildMenu(i, account)
       ]
     );
@@ -121,7 +171,7 @@ class _MainScreenState extends State<MainScreen> {
       children: [
         //censor || hoverIndex != i
         //? Text(censoredText, style: TextStyle(fontSize: 18))
-        SelectableText(account.name, style: TextStyle(fontSize: 18)),
+        Flexible(child: SelectableText(account.name, style: TextStyle(fontSize: 18))),
 
         GestureDetector(
           onTap: () => copyToClipboard(account.name, i, false),
@@ -143,7 +193,7 @@ class _MainScreenState extends State<MainScreen> {
       children: [
         //censor || hoverIndex != i
         //? Text(censoredText, style: TextStyle(fontSize: 18))
-        SelectableText(account.password, style: TextStyle(fontSize: 18)),
+        Flexible(child: SelectableText(account.password, style: TextStyle(fontSize: 18))),
 
         GestureDetector(
           onTap: () => copyToClipboard(account.password, i, true),

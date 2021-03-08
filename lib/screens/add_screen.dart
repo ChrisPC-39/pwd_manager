@@ -61,8 +61,7 @@ class _AddScreenState extends State<AddScreen> {
       case "Title": return 0;
       case "Username": return 1;
       case "Password": return 2;
-      default:
-        break;
+      default: return 0;
     }
   }
 
@@ -74,7 +73,7 @@ class _AddScreenState extends State<AddScreen> {
         children: [
           _buildColorContainer(Colors.green[400], 0xFF66BB6A, 0),
           _buildColorContainer(Colors.red[400], 0xFFEF5350, 1),
-          _buildColorContainer(Colors.grey[300], 0xFFE0E0E0, 2),
+          _buildColorContainer(Colors.grey[400], 0xFFBDBDBD, 2),
           _buildColorContainer(Colors.blue[400], 0xFF42A5F5, 3),
           _buildColorContainer(Colors.blue[800], 0xFF1565C0, 4),
           _buildColorContainer(Colors.indigo[400], 0xFF5C6BC0, 5),
@@ -110,7 +109,7 @@ class _AddScreenState extends State<AddScreen> {
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(colorCode)),
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.fromLTRB(20, 5, 10, 5),
+        margin: EdgeInsets.fromLTRB(20, 20, 20, 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -124,7 +123,6 @@ class _AddScreenState extends State<AddScreen> {
 
   Widget _buildInput(TextEditingController controller, String hintText, int i) {
     return Container(
-      width: MediaQuery.of(context).size.width,
       margin: EdgeInsets.fromLTRB(10, 10, 10, 0),
       padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       child: Row(
@@ -132,6 +130,9 @@ class _AddScreenState extends State<AddScreen> {
           Flexible(
             child: TextField(
               controller: controller,
+              onChanged: (value) {
+                if(value.contains("")) widget.titleController.text = "";
+              },
               onSubmitted: (value) {
                 logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
                 clearFields();
@@ -157,9 +158,12 @@ class _AddScreenState extends State<AddScreen> {
                 hoverIndex = -1;
               });
             },
-            child: GestureDetector(
-              onTap: () => clearIndividualField(hintText),
-              child: Icon(Icons.cancel_rounded, color: hoverIndex == i ? Colors.grey[700] : Colors.grey),
+            child: Container(
+              margin: EdgeInsets.only(left: 5),
+              child: GestureDetector(
+                onTap: () => clearIndividualField(hintText),
+                child: Icon(Icons.cancel_rounded, color: hoverIndex == i ? Colors.grey[700] : Colors.grey),
+              ),
             )
           )
         ]
@@ -170,7 +174,7 @@ class _AddScreenState extends State<AddScreen> {
   OutlineInputBorder _outlineBorder() {
     return OutlineInputBorder(
       borderSide: BorderSide(color: Colors.transparent),
-      borderRadius: BorderRadius.all(Radius.circular(20)),
+      borderRadius: BorderRadius.all(Radius.circular(10)),
     );
   }
 }
