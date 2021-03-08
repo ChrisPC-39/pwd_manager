@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:focused_menu/modals.dart';
 import 'package:hive/hive.dart';
 
 import 'database/account.dart';
@@ -48,4 +50,36 @@ int findIndex(int colorCode) {
     case 0xFFAB47BC: return 8;
     default: return 0;
   }
+}
+
+BoxDecoration buildBoxDecoration(double radius, int color) {
+  return BoxDecoration(
+    borderRadius: BorderRadius.circular(radius),
+    color: Color(color)
+  );
+}
+
+OutlineInputBorder outlineBorder() {
+  return OutlineInputBorder(
+    borderSide: BorderSide(color: Colors.transparent),
+    borderRadius: BorderRadius.all(Radius.circular(10)),
+  );
+}
+
+FocusedMenuItem buildFocusedMenuItem(Widget title, Icon icon, void onPressed(), Color background) {
+  return FocusedMenuItem(
+    title: title,
+    trailingIcon:icon,
+    onPressed: () => onPressed(),
+    backgroundColor: background
+  );
+}
+
+TextStyle textStyle({Color color = Colors.black, FontWeight fontWeight = FontWeight.bold, FontStyle fontStyle = FontStyle.normal,  double fontSize = 20}) {
+  return TextStyle(
+    color: color,
+    fontWeight: fontWeight,
+    fontStyle: fontStyle,
+    fontSize: fontSize
+  );
 }

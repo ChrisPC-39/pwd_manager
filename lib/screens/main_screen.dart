@@ -9,6 +9,7 @@ import 'package:pwd_manager/database/edit.dart';
 
 import '../database/account.dart';
 import '../main.dart' as main;
+import '../logic.dart' as logic;
 
 class MainScreen extends StatefulWidget {
   @override
@@ -74,8 +75,8 @@ class _MainScreenState extends State<MainScreen> {
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.grey[100],
-          enabledBorder: _outlineBorder(),
-          focusedBorder: _outlineBorder(),
+          enabledBorder: logic.outlineBorder(),
+          focusedBorder: logic.outlineBorder(),
           hintText: "Search for an account",
           prefixIcon: Icon(Icons.search_rounded, color: Colors.grey),
         )
@@ -87,7 +88,7 @@ class _MainScreenState extends State<MainScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Flexible(child: SelectableText(account.title, style: _textStyle(fontSize: 20, fontWeight: FontWeight.bold))),
+        Flexible(child: SelectableText(account.title, style: logic.textStyle(fontSize: 20, fontWeight: FontWeight.bold))),
         _buildMenu(i, account)
       ]
     );
@@ -122,13 +123,13 @@ class _MainScreenState extends State<MainScreen> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-      Flexible(child: SelectableText(account.name, style: _textStyle(fontSize: 18, fontWeight: FontWeight.normal))),
+      Flexible(child: SelectableText(account.name, style: logic.textStyle(fontSize: 18, fontWeight: FontWeight.normal))),
 
       //COPY BUTTON
       GestureDetector(
         onTap: () => copyToClipboard(account.name, i, false),
         child: copyIndex == i && copyName
-          ? Text("Copied!", style: _textStyle(color: Colors.grey[800], fontStyle: FontStyle.italic, fontSize: 10))
+          ? Text("Copied!", style: logic.textStyle(color: Colors.grey[800], fontStyle: FontStyle.italic, fontSize: 10))
           : Icon(Icons.copy_rounded, color: Colors.grey[800])
         )
       ]
@@ -164,7 +165,7 @@ class _MainScreenState extends State<MainScreen> {
         onHover: (event) { _buildOnHover(i); },
         onExit: (event) { _buildOnExit(); },
         child: Container(
-          decoration: _buildBoxDecoration(10, account.colorCode),
+          decoration: logic.buildBoxDecoration(10, account.colorCode),
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
           child: Column(
@@ -181,54 +182,22 @@ class _MainScreenState extends State<MainScreen> {
     );
   }
 
-  BoxDecoration _buildBoxDecoration(double radius, int color) {
-    return BoxDecoration(
-      borderRadius: BorderRadius.circular(radius),
-      color: Color(color)
-    );
-  }
-
   List<FocusedMenuItem> _buildFocusedMenuItemList(Account account, int i) {
     return [
-      _buildFocusedMenuItem(
-        Text("Edit", style: _textStyle(color: Colors.grey[800])),
+      logic.buildFocusedMenuItem(
+        Text("Edit", style: logic.textStyle(color: Colors.grey[800], fontSize: 15)),
         Icon(Icons.edit_rounded, color: Colors.grey[800]),
         () { main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode)); },
         Colors.white
       ),
 
-      _buildFocusedMenuItem(
-        Text("Delete", style: _textStyle(color: Colors.white)),
+      logic.buildFocusedMenuItem(
+        Text("Delete", style: logic.textStyle(color: Colors.white, fontSize: 15)),
         Icon(Icons.delete_rounded, color: Colors.white),
         () { Hive.box('accounts').deleteAt(i); },
         Colors.red[400]
       )
     ];
-  }
-
-  FocusedMenuItem _buildFocusedMenuItem(Widget title, Icon icon, void onPressed(), Color background) {
-    return FocusedMenuItem(
-      title: title,
-      trailingIcon:icon,
-      onPressed: () => onPressed(),
-      backgroundColor: background
-    );
-  }
-
-  TextStyle _textStyle({Color color = Colors.black, FontWeight fontWeight = FontWeight.bold, FontStyle fontStyle = FontStyle.normal,  double fontSize = 20}) {
-    return TextStyle(
-      color: color,
-      fontWeight: fontWeight,
-      fontStyle: fontStyle,
-      fontSize: fontSize
-    );
-  }
-
-  OutlineInputBorder _outlineBorder() {
-    return OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.transparent),
-      borderRadius: BorderRadius.all(Radius.circular(10)),
-    );
   }
 
   void copyToClipboard(String text, int i, bool isPwd) {

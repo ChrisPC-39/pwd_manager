@@ -36,24 +36,6 @@ class _EditScreenState extends State<EditScreen> {
     );
   }
 
-  void fillFields() {
-    final editAcc = main.boxList[1].getAt(0) as Edit;
-    if(!indexSet) {
-      widget.titleController.text = editAcc.title;
-      widget.accountController.text = editAcc.name;
-      widget.pwdController.text = editAcc.password;
-      colorCode = editAcc.colorCode;
-      index = logic.findIndex(editAcc.colorCode);
-    }
-    indexSet = true;
-  }
-
-  void clearFields() {
-    widget.titleController.text = "";
-    widget.accountController.text = "";
-    widget.pwdController.text = "";
-  }
-
   Widget _buildColorPicker() {
     return Container(
       padding: EdgeInsets.all(10),
@@ -79,7 +61,7 @@ class _EditScreenState extends State<EditScreen> {
       child: GestureDetector(
         onTap: () => setState(() { index = i; colorCode = code; }),
         child:  Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: color),
+          decoration: logic.buildBoxDecoration(10, code),//BoxDecoration(borderRadius: BorderRadius.circular(10), color: color),
           margin: EdgeInsets.only(right: 2),
           width: 50,
           height: 50,
@@ -108,7 +90,7 @@ class _EditScreenState extends State<EditScreen> {
               }
             },
             child: Container(
-              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
+              decoration: logic.buildBoxDecoration(10, colorCode),//BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
               padding: EdgeInsets.all(10),
               margin: EdgeInsets.fromLTRB(20, 20, 5, 5),
               child: Row(
@@ -196,6 +178,24 @@ class _EditScreenState extends State<EditScreen> {
       borderSide: BorderSide(color: Colors.transparent),
       borderRadius: BorderRadius.all(Radius.circular(10)),
     );
+  }
+
+  void fillFields() {
+    final editAcc = main.boxList[1].getAt(0) as Edit;
+    if(!indexSet) {
+      widget.titleController.text = editAcc.title;
+      widget.accountController.text = editAcc.name;
+      widget.pwdController.text = editAcc.password;
+      colorCode = editAcc.colorCode;
+      index = logic.findIndex(editAcc.colorCode);
+    }
+    indexSet = true;
+  }
+
+  void clearFields() {
+    widget.titleController.text = "";
+    widget.accountController.text = "";
+    widget.pwdController.text = "";
   }
 
   void clearIndividualField(String text) {
