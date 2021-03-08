@@ -17,6 +17,9 @@ class AddScreen extends StatefulWidget {
 }
 
 class _AddScreenState extends State<AddScreen> {
+  int colorCode = 0xFF66BB6A;
+  int index = 0;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -25,6 +28,7 @@ class _AddScreenState extends State<AddScreen> {
         _buildInput(widget.titleController, "Title"),
         _buildInput(widget.accountController, "Username"),
         _buildInput(widget.pwdController, "Password"),
+        _buildColorPicker()
       ]
     );
   }
@@ -51,21 +55,56 @@ class _AddScreenState extends State<AddScreen> {
     }
   }
 
+  Widget _buildColorPicker() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      child: Row(
+        children: [
+          _buildColorContainer(Colors.green[400], 0xFF66BB6A, 0),
+          _buildColorContainer(Colors.red[400], 0xFFEF5350, 1),
+          _buildColorContainer(Colors.grey[300], 0xFFE0E0E0, 2),
+          _buildColorContainer(Colors.blue[400], 0xFF42A5F5, 3),
+          _buildColorContainer(Colors.blue[800], 0xFF1565C0, 4),
+          _buildColorContainer(Colors.indigo[400], 0xFF5C6BC0, 5),
+          _buildColorContainer(Colors.yellow[400], 0xFFFFEE58, 6),
+          _buildColorContainer(Colors.orange[400], 0xFFFFA726, 7),
+          _buildColorContainer(Colors.purple[400], 0xFFAB47BC, 8),
+        ]
+      )
+    );
+  }
+
+  Widget _buildColorContainer(Color color, int code, int i) {
+    return Flexible(
+      child: GestureDetector(
+        onTap: () => setState(() { index = i; colorCode = code; }),
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: color),
+          margin: EdgeInsets.only(right: 2),
+          width: 50,
+          height: 50,
+          child: i == index ? Icon(Icons.check_rounded) : Container()
+        )
+      )
+    );
+  }
+
   Widget _buildAddButton() {
     return GestureDetector(
       onTap: () {
-        logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+        logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
         clearFields();
       },
       child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.green[400]),
+        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(colorCode)),
         padding: EdgeInsets.all(10),
         margin: EdgeInsets.fromLTRB(20, 5, 10, 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("Add", style: TextStyle(color: Colors.white)),
-            Icon(Icons.add_rounded, color: Colors.white)
+            Text("Add", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
+            Icon(Icons.add_rounded, color: Colors.black)
           ]
         )
       )
@@ -83,7 +122,7 @@ class _AddScreenState extends State<AddScreen> {
             child: TextField(
               controller: controller,
               onSubmitted: (value) {
-                logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+                logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
                 clearFields();
               },
               decoration: InputDecoration(

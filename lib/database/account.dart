@@ -13,5 +13,11 @@ class Account {
   @HiveField(2)
   final String password;
 
-  Account(this.title, this.name, this.password);
+  @HiveField(3)
+  final bool isColored;
+
+  @HiveField(4)
+  final int colorCode;
+
+  Account(this.title, this.name, this.password, this.isColored, this.colorCode);
 }

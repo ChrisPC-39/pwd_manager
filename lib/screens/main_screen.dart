@@ -92,14 +92,17 @@ class _MainScreenState extends State<MainScreen> {
           // Container(width: 10),
 
           GestureDetector(
-            onTap: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i)),
+            onTap: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode)),
             child: Icon(Icons.edit_rounded, color: Colors.grey[800])
           ),
 
           Container(width: 10),
 
           GestureDetector(
-            onTap: () => Hive.box('accounts').deleteAt(i),
+            onTap: () {
+              Hive.box('accounts').deleteAt(i);
+              main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, false, i, account.colorCode));
+            },
             child: Icon(Icons.delete_rounded, color: Colors.grey[800])
           )
         ]
@@ -163,7 +166,7 @@ class _MainScreenState extends State<MainScreen> {
         FocusedMenuItem(
           title: Text("Edit", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold)),
           trailingIcon: Icon(Icons.edit_rounded, color: Colors.grey[800]),
-          onPressed: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i))
+          onPressed: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode))
         ),
 
         FocusedMenuItem(
@@ -184,7 +187,7 @@ class _MainScreenState extends State<MainScreen> {
           censor = true;
         }); },
         child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.grey[300]),
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(account.colorCode)),
           padding: EdgeInsets.all(10),
           margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
           child: Column(

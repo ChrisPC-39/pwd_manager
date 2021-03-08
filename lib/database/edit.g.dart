@@ -22,13 +22,14 @@ class EditAdapter extends TypeAdapter<Edit> {
       fields[2] as String,
       fields[3] as bool,
       fields[4] as int,
+      fields[5] as int,
     );
   }
 
   @override
   void write(BinaryWriter writer, Edit obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class EditAdapter extends TypeAdapter<Edit> {
       ..writeByte(3)
       ..write(obj.isEditing)
       ..writeByte(4)
-      ..write(obj.index);
+      ..write(obj.index)
+      ..writeByte(5)
+      ..write(obj.colorCode);
   }
 
   @override

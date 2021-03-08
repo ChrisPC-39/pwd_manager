@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pwd_manager/database/account.dart';
 import 'package:pwd_manager/database/edit.dart';
+import '../logic.dart' as logic;
 import '../main.dart' as main;
 
 class EditScreen extends StatefulWidget {
@@ -13,6 +14,10 @@ class EditScreen extends StatefulWidget {
 }
 
 class _EditScreenState extends State<EditScreen> {
+  int colorCode = 0xFF66BB6A;
+  int index = 0;
+  bool indexSet = false;
+
   @override
   Widget build(BuildContext context) {
     fillFields();
@@ -23,6 +28,7 @@ class _EditScreenState extends State<EditScreen> {
         _buildInput(widget.titleController, "Title"),
         _buildInput(widget.accountController, "Username"),
         _buildInput(widget.pwdController, "Password"),
+        _buildColorPicker()
       ]
     );
   }
@@ -32,12 +38,52 @@ class _EditScreenState extends State<EditScreen> {
     widget.titleController.text = editAcc.title;
     widget.accountController.text = editAcc.name;
     widget.pwdController.text = editAcc.password;
+    if(!indexSet) {
+      colorCode = editAcc.colorCode;
+      index = logic.findIndex(editAcc.colorCode);
+    }
+    indexSet = true;
   }
 
   void clearFields() {
     widget.titleController.text = "";
     widget.accountController.text = "";
     widget.pwdController.text = "";
+  }
+
+  Widget _buildColorPicker() {
+    return Container(
+      padding: EdgeInsets.all(10),
+      margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
+      child: Row(
+        children: [
+        _buildColorContainer(Colors.green[400], 0xFF66BB6A, 0),
+        _buildColorContainer(Colors.red[400], 0xFFEF5350, 1),
+        _buildColorContainer(Colors.grey[300], 0xFFE0E0E0, 2),
+        _buildColorContainer(Colors.blue[400], 0xFF42A5F5, 3),
+        _buildColorContainer(Colors.blue[800], 0xFF1565C0, 4),
+        _buildColorContainer(Colors.indigo[400], 0xFF5C6BC0, 5),
+        _buildColorContainer(Colors.yellow[400], 0xFFFFEE58, 6),
+        _buildColorContainer(Colors.orange[400], 0xFFFFA726, 7),
+        _buildColorContainer(Colors.purple[400], 0xFFAB47BC, 8),
+        ]
+      )
+    );
+  }
+
+  Widget _buildColorContainer(Color color, int code, int i) {
+    return Flexible(
+      child: GestureDetector(
+        onTap: () => setState(() { index = i; colorCode = code; }),
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: color),
+          margin: EdgeInsets.only(right: 2),
+          width: 50,
+          height: 50,
+          child: i == index ? Icon(Icons.check_rounded) : Container()
+        )
+      )
+    );
   }
 
   Widget _buildAddButton() {
@@ -48,10 +94,10 @@ class _EditScreenState extends State<EditScreen> {
             onTap: () {
               if(widget.titleController.text != "" && widget.accountController.text != "" && widget.pwdController.text != "") {
                 final editAcc = main.boxList[1].getAt(0) as Edit;
-                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
-                main.boxList[1].putAt(0, Edit("", "", "", false, 0));
+                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
+                main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
 
-              } else main.boxList[1].putAt(0, Edit("", "", "", false, 0));
+              } else main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
             },
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
@@ -70,7 +116,7 @@ class _EditScreenState extends State<EditScreen> {
 
         Flexible(
           child: GestureDetector(
-            onTap: () => main.boxList[1].putAt(0, Edit("", "", "", false, 0)),
+            onTap: () => main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode)),
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.red[400]),
               padding: EdgeInsets.all(10),
@@ -83,7 +129,7 @@ class _EditScreenState extends State<EditScreen> {
                 ]
               )
             )
-          ),
+          )
         )
       ]
     );
@@ -101,8 +147,8 @@ class _EditScreenState extends State<EditScreen> {
               controller: controller,
               onSubmitted: (value) {
                 final editAcc = main.boxList[1].getAt(0) as Edit;
-                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
-                main.boxList[1].putAt(0, Edit("", "", "", false, 0));
+                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, 0xFFBDBDBD));
+                main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
                 clearFields();
               },
               decoration: InputDecoration(

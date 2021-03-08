@@ -19,5 +19,8 @@ class Edit {
   @HiveField(4)
   final int index;
 
-  Edit(this.title, this.name, this.password, this.isEditing, this.index);
+  @HiveField(5)
+  final int colorCode;
+
+  Edit(this.title, this.name, this.password, this.isEditing, this.index, this.colorCode);
 }
