@@ -181,7 +181,7 @@ class _MainScreenState extends State<MainScreen> {
     final account = Hive.box('accounts').getAt(i) as Account;
 
     return FocusedMenuHolder(
-      menuWidth: MediaQuery.of(context).size.width * 0.34,
+      menuWidth: MediaQuery.of(context).size.width * 0.355,
       onPressed: () {},
       key: UniqueKey(),
       menuItems: _buildFocusedMenuItemList(account, i),

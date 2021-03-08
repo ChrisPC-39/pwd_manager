@@ -11,28 +11,30 @@ class DrawerScreen extends StatefulWidget {
 }
 
 class _DrawerScreenState extends State<DrawerScreen> {
+  bool isDrawerExpanded = true;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Colors.green[400],
-      width: resizeDrawer.increaseDrawerSize ? 150 : 60,
+      width: isDrawerExpanded ? 150 : 60,
       child: Column(
         children: [
           _buildTile(
             Icon(Icons.menu),
-            Text(!resizeDrawer.increaseDrawerSize ? "" : "Drawer"),
-            () { resizeDrawer.increaseDrawerSize = !resizeDrawer.increaseDrawerSize; setState(() {});}
+            Text(!isDrawerExpanded ? "" : "Drawer"),
+            () { setState(() { isDrawerExpanded = !isDrawerExpanded; });}
           ),
 
           _buildTile(
             Icon(Icons.delete_forever_rounded),
-            Text(!resizeDrawer.increaseDrawerSize ? "" : "Delete all"),
+            Text(!isDrawerExpanded ? "" : "Delete all"),
             () { _showDeleteDialog(context); }
           ),
 
           _buildTile(
             Icon(deleted.account.length == 0 ? Icons.do_not_disturb : Icons.undo_rounded),
-            !resizeDrawer.increaseDrawerSize ? Text("") : Text(deleted.account.length == 0 ? "Nothing to undo" : "Undo"),
+            !isDrawerExpanded ? Text("") : Text(deleted.account.length == 0 ? "Nothing to undo" : "Undo"),
             () {
               for(int i = 0; i < deleted.account.length; i++)
                 logic.addAccount(deleted.account.elementAt(i));
@@ -43,7 +45,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
           _buildTile(
             Icon(reorder.isReordering == true ? Icons.check_rounded : Icons.repeat_rounded),
-            !resizeDrawer.increaseDrawerSize ? Text("") : Text(reorder.isReordering == true ? "Done reordering" : "Reorder"),
+            !isDrawerExpanded ? Text("") : Text(reorder.isReordering == true ? "Done reordering" : "Reorder"),
             () {
               setState(() { reorder.isReordering = !reorder.isReordering; });
             }
@@ -51,13 +53,13 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
           _buildTile(
             Icon(Icons.file_copy_outlined),
-            Text(!resizeDrawer.increaseDrawerSize ? "" : "View licenses"),
+            Text(!isDrawerExpanded ? "" : "View licenses"),
             () { _showLicensesDialog(context); }
           ),
 
           _buildTile(
             Icon(Icons.info_outline_rounded),
-            Text(!resizeDrawer.increaseDrawerSize ? "" : "About"),
+            Text(!isDrawerExpanded ? "" : "About"),
             () { _showAboutDialog(context); }
           )
         ]
