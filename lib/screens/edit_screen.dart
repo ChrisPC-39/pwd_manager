@@ -20,10 +20,14 @@ class _EditScreenState extends State<EditScreen> {
   int index = 0;
   bool indexSet = false;
   int hoverIndex = -1;
+  String copyName = "";
 
   @override
   Widget build(BuildContext context) {
     fillFields();
+    setState(() {
+      copyName = widget.titleController.text;
+    });
 
     return Column(
       children: [
@@ -190,6 +194,7 @@ class _EditScreenState extends State<EditScreen> {
       index = logic.findIndex(editAcc.colorCode);
     }
     indexSet = true;
+    if(widget.titleController.text != copyName) indexSet = false;
   }
 
   void clearFields() {
