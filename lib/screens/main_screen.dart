@@ -6,7 +6,7 @@ import 'package:focused_menu/modals.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pwd_manager/database/edit.dart';
-import 'package:pwd_manager/deleted.dart';
+import 'package:pwd_manager/globals.dart';
 
 import '../database/account.dart';
 import '../main.dart' as main;
@@ -32,8 +32,27 @@ class _MainScreenState extends State<MainScreen> {
     return Column(
       children: [
         _buildSearchBar(),
-        _buildListView()
+        reorder.isReordering == true ? _buildReorderableList() : _buildListView()
       ]
+    );
+  }
+
+  Widget _buildReorderableList() {
+    return ValueListenableBuilder(
+      valueListenable: Hive.box('accounts').listenable(),
+      builder: (context, accountsBox, _) {
+        return Flexible(
+          child: ReorderableListView(
+            key: listKey,
+            onReorder: logic.reorderList,
+            physics: BouncingScrollPhysics(),
+            children: [
+              for(int i = 0; i < Hive.box('accounts').length; i++)
+                _buildContainer(i)
+            ]
+          )
+        );
+      }
     );
   }
 

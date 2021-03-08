@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:pwd_manager/database/account.dart';
-import 'package:pwd_manager/deleted.dart';
+import 'package:pwd_manager/globals.dart';
 
 import '../logic.dart' as logic;
 
@@ -31,6 +31,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 logic.addAccount(deleted.account.elementAt(i));
               deleted.account.clear();
               setState(() {});
+            }
+          ),
+
+          _buildTile(
+            Icon(reorder.isReordering == true ? Icons.check_rounded : Icons.repeat_rounded),
+            Text(reorder.isReordering == true ? "Done reordering" : "Reorder"),
+            () {
+              setState(() { reorder.isReordering = !reorder.isReordering; });
             }
           ),
 
@@ -114,7 +122,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       context: context,
       applicationIcon: FlutterLogo(),
       applicationName: "Password Manager",
-      applicationVersion: '0.3.0',
+      applicationVersion: '0.3.3',
       applicationLegalese: "Enjoy offline storage for your valuable accounts!"
     );
   }

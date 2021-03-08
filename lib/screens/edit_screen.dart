@@ -100,8 +100,8 @@ class _EditScreenState extends State<EditScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Update", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Icon(Icons.update_rounded, color: Colors.white)
+                  Text("Update", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Icon(Icons.update_rounded)
                 ]
               )
             )
@@ -118,8 +118,8 @@ class _EditScreenState extends State<EditScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text("Cancel", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-                  Icon(Icons.cancel_rounded, color: Colors.white)
+                  Text("Cancel", style: TextStyle(fontWeight: FontWeight.bold)),
+                  Icon(Icons.cancel_rounded)
                 ]
               )
             )
