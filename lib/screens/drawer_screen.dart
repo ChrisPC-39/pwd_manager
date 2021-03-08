@@ -98,6 +98,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                   deleted.account.add(account);
                 }
 
+                setState(() {});
                 accountsBox.clear();
                 Navigator.of(context).pop();
               }
