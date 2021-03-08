@@ -60,7 +60,7 @@ class _AddScreenState extends State<AddScreen> {
       child: Container(
         decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.green[400]),
         padding: EdgeInsets.all(10),
-        margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
+        margin: EdgeInsets.fromLTRB(20, 5, 10, 5),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

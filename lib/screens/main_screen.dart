@@ -84,12 +84,12 @@ class _MainScreenState extends State<MainScreen> {
       visible: isHovering && hoverIndex == i,
       child: Row(
         children: [
-          GestureDetector(
-            onTap: () => setState(() { censor = !censor; }),
-            child: Icon(censor ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: Colors.grey[800])
-          ),
+          // GestureDetector(
+          //   onTap: () => setState(() { censor = !censor; }),
+          //   child: Icon(censor ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: Colors.grey[800])
+          // ),
 
-          Container(width: 10),
+          // Container(width: 10),
 
           GestureDetector(
             onTap: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i)),
@@ -109,16 +109,16 @@ class _MainScreenState extends State<MainScreen> {
 
   //The following 2 functions are completely cursed.
   Widget _buildNameRow(Account account, int i) {
-    String censoredText = "";
-    for(int i = 0; i < account.name.length; i++)
-      censoredText += "*";
+    // String censoredText = "";
+    // for(int i = 0; i < account.name.length; i++)
+    //   censoredText += "*";
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        censor || hoverIndex != i
-        ? Text(censoredText, style: TextStyle(fontSize: 18))
-        : SelectableText(account.name, style: TextStyle(fontSize: 18)),
+        //censor || hoverIndex != i
+        //? Text(censoredText, style: TextStyle(fontSize: 18))
+        SelectableText(account.name, style: TextStyle(fontSize: 18)),
 
         GestureDetector(
           onTap: () => copyToClipboard(account.name, i, false),
@@ -131,16 +131,16 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildPwdRow(Account account, int i) {
-    String censoredText = "";
-    for(int i = 0; i < account.password.length; i++)
-      censoredText += "*";
+    // String censoredText = "";
+    // for(int i = 0; i < account.password.length; i++)
+    //   censoredText += "*";
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        censor || hoverIndex != i
-        ? Text(censoredText, style: TextStyle(fontSize: 18))
-        : SelectableText(account.password, style: TextStyle(fontSize: 18)),
+        //censor || hoverIndex != i
+        //? Text(censoredText, style: TextStyle(fontSize: 18))
+        SelectableText(account.password, style: TextStyle(fontSize: 18)),
 
         GestureDetector(
           onTap: () => copyToClipboard(account.password, i, true),

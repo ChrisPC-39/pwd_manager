@@ -41,28 +41,51 @@ class _EditScreenState extends State<EditScreen> {
   }
 
   Widget _buildAddButton() {
-    return GestureDetector(
-      onTap: () {
-        if(widget.titleController.text != "" && widget.accountController.text != "" && widget.pwdController.text != "") {
-          final editAcc = main.boxList[1].getAt(0) as Edit;
-          main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
-          main.boxList[1].putAt(0, Edit("", "", "", false, 0));
+    return Row(
+      children: [
+        Flexible(
+          child: GestureDetector(
+            onTap: () {
+              if(widget.titleController.text != "" && widget.accountController.text != "" && widget.pwdController.text != "") {
+                final editAcc = main.boxList[1].getAt(0) as Edit;
+                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text));
+                main.boxList[1].putAt(0, Edit("", "", "", false, 0));
 
-          clearFields();
-        } else main.boxList[1].putAt(0, Edit("", "", "", false, 0));
-      },
-      child: Container(
-        decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
-        padding: EdgeInsets.all(10),
-        margin: EdgeInsets.fromLTRB(20, 5, 20, 5),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text("Update", style: TextStyle(color: Colors.white)),
-            Icon(Icons.update_rounded, color: Colors.white)
-          ]
+              } else main.boxList[1].putAt(0, Edit("", "", "", false, 0));
+            },
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.fromLTRB(20, 5, 5, 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Update", style: TextStyle(color: Colors.white)),
+                  Icon(Icons.update_rounded, color: Colors.white)
+                ]
+              )
+            )
+          )
+        ),
+
+        Flexible(
+          child: GestureDetector(
+            onTap: () => main.boxList[1].putAt(0, Edit("", "", "", false, 0)),
+            child: Container(
+              decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.red[400]),
+              padding: EdgeInsets.all(10),
+              margin: EdgeInsets.fromLTRB(5, 5, 10, 5),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text("Cancel", style: TextStyle(color: Colors.white)),
+                  Icon(Icons.cancel_rounded, color: Colors.white)
+                ]
+              )
+            )
+          ),
         )
-      )
+      ]
     );
   }
 
