@@ -6,6 +6,7 @@ import 'package:focused_menu/modals.dart';
 import 'package:hive/hive.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:pwd_manager/database/edit.dart';
+import 'package:pwd_manager/deleted.dart';
 
 import '../database/account.dart';
 import '../main.dart' as main;
@@ -108,6 +109,7 @@ class _MainScreenState extends State<MainScreen> {
 
           GestureDetector(
             onTap: () {
+              deleted.account.add(Hive.box('accounts').getAt(i) as Account);
               Hive.box('accounts').deleteAt(i);
               main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, false, i, account.colorCode));
             },
@@ -129,7 +131,7 @@ class _MainScreenState extends State<MainScreen> {
       GestureDetector(
         onTap: () => copyToClipboard(account.name, i, false),
         child: copyIndex == i && copyName
-          ? Text("Copied!", style: logic.textStyle(color: Colors.grey[800], fontStyle: FontStyle.italic, fontSize: 10))
+          ? Text("Copied!", style: logic.textStyle(color: Colors.grey[800], fontStyle: FontStyle.italic, fontSize: 14))
           : Icon(Icons.copy_rounded, color: Colors.grey[800])
         )
       ]
@@ -146,7 +148,7 @@ class _MainScreenState extends State<MainScreen> {
       GestureDetector(
         onTap: () => copyToClipboard(account.password, i, true),
         child: copyIndex == i && copyPwd
-          ? Text("Copied!", style: TextStyle(color: Colors.grey[800], fontWeight: FontWeight.bold, fontStyle: FontStyle.italic))
+          ? Text("Copied!", style: logic.textStyle(color: Colors.grey[800], fontStyle: FontStyle.italic, fontSize: 14))
           : Icon(Icons.copy_rounded, color: Colors.grey[800])
         )
       ]
