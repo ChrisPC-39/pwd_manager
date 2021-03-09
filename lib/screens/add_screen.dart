@@ -75,7 +75,7 @@ class _AddScreenState extends State<AddScreen> {
   Widget _buildAddButton() {
     return GestureDetector(
       onTap: () {
-        logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
+        logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode, false));
         clearFields();
       },
       child: Container(
@@ -103,10 +103,10 @@ class _AddScreenState extends State<AddScreen> {
             child: TextField(
               controller: controller,
               onChanged: (value) {
-                if(value.contains("")) widget.titleController.text = "";
+                if(value.contains("")) clearIndividualField(hintText);
               },
               onSubmitted: (value) {
-                logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
+                logic.addAccount(new Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode, false));
                 clearFields();
               },
               decoration: InputDecoration(

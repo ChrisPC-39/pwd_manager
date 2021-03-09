@@ -22,13 +22,14 @@ class AccountAdapter extends TypeAdapter<Account> {
       fields[2] as String,
       fields[3] as bool,
       fields[4] as int,
+      fields[5] as bool,
     );
   }
 
   @override
   void write(BinaryWriter writer, Account obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(6)
       ..writeByte(0)
       ..write(obj.title)
       ..writeByte(1)
@@ -38,7 +39,9 @@ class AccountAdapter extends TypeAdapter<Account> {
       ..writeByte(3)
       ..write(obj.isColored)
       ..writeByte(4)
-      ..write(obj.colorCode);
+      ..write(obj.colorCode)
+      ..writeByte(5)
+      ..write(obj.censored);
   }
 
   @override

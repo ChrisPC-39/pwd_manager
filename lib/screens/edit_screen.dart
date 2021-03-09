@@ -86,16 +86,18 @@ class _EditScreenState extends State<EditScreen> {
               final account = Hive.box('accounts').getAt(editAcc.index) as Account;
 
               if(widget.titleController.text != "" && widget.accountController.text != "" && widget.pwdController.text != "") {
-                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
+                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode, true));
                 main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
 
               } else {
-                main.boxList[0].putAt(editAcc.index, Account(account.title, account.name, account.password, false, colorCode));
+                main.boxList[0].putAt(editAcc.index, Account(account.title, account.name, account.password, false, colorCode, true));
                 main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
               }
+
+              setState(() {});
             },
             child: Container(
-              decoration: logic.buildBoxDecoration(10, colorCode),//BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.indigo[400]),
+              decoration: logic.buildBoxDecoration(10, colorCode),
               padding: EdgeInsets.all(10),
               margin: EdgeInsets.fromLTRB(20, 20, 5, 5),
               child: Row(
@@ -111,7 +113,13 @@ class _EditScreenState extends State<EditScreen> {
 
         Flexible(
           child: GestureDetector(
-            onTap: () => main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode)),
+            onTap: () {
+              final editAcc = main.boxList[1].getAt(0) as Edit;
+              final account = Hive.box('accounts').getAt(editAcc.index) as Account;
+
+              main.boxList[0].putAt(editAcc.index, Account(account.title, account.name, account.password, false, colorCode, false));
+              main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
+            },
             child: Container(
               decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Colors.red[400]),
               padding: EdgeInsets.all(10),
@@ -141,11 +149,11 @@ class _EditScreenState extends State<EditScreen> {
             child: TextField(
               controller: controller,
               onChanged: (value) {
-                if(value.contains("")) widget.titleController.text = "";
+                if(value.contains("")) clearIndividualField(hintText);
               },
               onSubmitted: (value) {
                 final editAcc = main.boxList[1].getAt(0) as Edit;
-                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode));
+                main.boxList[0].putAt(editAcc.index, Account(widget.titleController.text, widget.accountController.text, widget.pwdController.text, false, colorCode, true));
                 main.boxList[1].putAt(0, Edit("", "", "", false, 0, colorCode));
                 clearFields();
               },

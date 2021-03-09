@@ -48,18 +48,21 @@ class _MyAppState extends State<MyApp> {
             builder: (context, editBox, _) {
               final edit = boxList[1].getAt(0) as Edit;
               return SafeArea(
-                child: Scaffold(
-                  backgroundColor: Color(0xFFe0e0e0),
-                  body: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      DrawerScreen(),
-                      MainScreen(),
-                      edit.isEditing
-                        ? Expanded(child: EditScreen())
-                        : AddScreen()
-                    ]
-                  )
+                child: GestureDetector(
+                  onTap: () => FocusScope.of(context).unfocus(),
+                  child: Scaffold(
+                    backgroundColor: Color(0xFFe0e0e0),
+                    body: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        DrawerScreen(),
+                        MainScreen(),
+                        edit.isEditing
+                          ? EditScreen()
+                          : AddScreen()
+                      ]
+                    )
+                  ),
                 )
               );
             }

@@ -15,15 +15,41 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final accountsBox = Hive.box('accounts');
+
     return Container(
       color: Colors.green[400],
       width: isDrawerExpanded ? 150 : 60,
       child: Column(
         children: [
+          Container(height: 10),
+
           _buildTile(
             Icon(Icons.menu),
             Text(!isDrawerExpanded ? "" : "Drawer"),
             () { setState(() { isDrawerExpanded = !isDrawerExpanded; });}
+          ),
+
+          _buildTile(
+            Icon(Icons.visibility_rounded),
+            Text(!isDrawerExpanded ? "" : "Show all accounts"),
+            () {
+              for(int i = 0; i < accountsBox.length; i++) {
+                final acc = accountsBox.getAt(i) as Account;
+                accountsBox.putAt(i, Account(acc.title, acc.name, acc.password, acc.isColored, acc.colorCode, true));
+              }
+            }
+          ),
+
+          _buildTile(
+            Icon(Icons.visibility_off_rounded),
+            Text(!isDrawerExpanded ? "" : "Hide all accounts"),
+            () {
+              for(int i = 0; i < accountsBox.length; i++) {
+                final acc = accountsBox.getAt(i) as Account;
+                accountsBox.putAt(i, Account(acc.title, acc.name, acc.password, acc.isColored, acc.colorCode, false));
+              }
+            }
           ),
 
           _buildTile(
@@ -81,7 +107,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       builder: (context) {
         return AlertDialog(
           title: Text("About"),
-          content: Text("\${PASSWORD_MANAGER.title} is a free, open source and offline app to help you save your passwords. Keeping any sensitive information online is a risk, this is why this app is entirely offline! Don't send your data to anyone!"),
+          content: Text("pwd_manager is a free, open source and offline app to help you save your passwords. Keeping any sensitive information online is a risk, this is why this app is entirely offline! Don't send your data to anyone!"),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -131,7 +157,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
       context: context,
       applicationIcon: FlutterLogo(),
       applicationName: "Password Manager",
-      applicationVersion: '0.3.6',
+      applicationVersion: '1.0.0',
       applicationLegalese: "Enjoy offline storage for your valuable accounts!"
     );
   }

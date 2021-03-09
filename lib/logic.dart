@@ -26,7 +26,7 @@ void reorderList(int oldIndex, int newIndex) {
 }
 
 void addAccount(Account account) {
-  Hive.box('accounts').add(Account("", "", "", false, 0xFFBDBDBD));
+  Hive.box('accounts').add(Account("", "", "", false, 0xFFBDBDBD, false));
   final allAccounts = Hive.box('accounts');
 
   for(int i = Hive.box('accounts').length - 1; i >= 1 ; i--) {

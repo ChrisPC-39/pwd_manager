@@ -19,5 +19,8 @@ class Account {
   @HiveField(4)
   final int colorCode;
 
-  Account(this.title, this.name, this.password, this.isColored, this.colorCode);
+  @HiveField(5)
+  final bool censored;
+
+  Account(this.title, this.name, this.password, this.isColored, this.colorCode, this.censored);
 }

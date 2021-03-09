@@ -33,10 +33,10 @@ class _MainScreenState extends State<MainScreen> {
       flex: 2,
       child: Column(
         children: [
-          _buildSearchBar(),
-          reorder.isReordering == true ? _buildReorderableList() : _buildListView()
+          reorder.isReordering ? Container(height: 15) : _buildSearchBar(),
+          reorder.isReordering ? _buildReorderableList() : _buildListView()
         ]
-      ),
+      )
     );
   }
 
@@ -123,7 +123,19 @@ class _MainScreenState extends State<MainScreen> {
       child: Row(
         children: [
           GestureDetector(
-            onTap: () => main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode)),
+            onTap: () {
+              Hive.box('accounts').putAt(i, Account(account.title, account.name, account.password, account.isColored, account.colorCode, !account.censored));
+            },
+            child: Icon(!account.censored ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: Colors.grey[800])
+          ),
+
+          Container(width: 10),
+
+          GestureDetector(
+            onTap: () {
+              Hive.box('accounts').putAt(i, Account(account.title, account.name, account.password, account.isColored, account.colorCode, true));
+              main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode));
+            },
             child: Icon(Icons.edit_rounded, color: Colors.grey[800])
           ),
 
@@ -144,10 +156,14 @@ class _MainScreenState extends State<MainScreen> {
 
   //The following 2 functions are completely cursed.
   Widget _buildNameRow(Account account, int i) {
+    String text = "";
+    for(int i = 0; i < account.name.length; i++)
+      text += "*";
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-      Flexible(child: SelectableText(account.name, style: logic.textStyle(fontSize: 18, fontWeight: FontWeight.normal))),
+      Flexible(child: SelectableText(!account.censored ? text : account.name, style: logic.textStyle(fontSize: 18, fontWeight: FontWeight.normal))),
 
       //COPY BUTTON
       GestureDetector(
@@ -161,10 +177,14 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Widget _buildPwdRow(Account account, int i) {
+    String text = "";
+    for(int i = 0; i < account.password.length; i++)
+      text += "*";
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-      Flexible(child: SelectableText(account.password, style: TextStyle(fontSize: 18))),
+      Flexible(child: SelectableText(!account.censored ? text : account.password, style: TextStyle(fontSize: 18))),
 
       //COPY BUTTON
       GestureDetector(
