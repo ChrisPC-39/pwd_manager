@@ -2,15 +2,20 @@
 
 A local password manager for Windows. Avoid keeping your passwords online for your safety!
 
-## Getting Started
+## Release features
+Main features:
+  - Add an account (title, username and password, tile color)
+  - Copy/select any info with ease
+  - Edit an account
+  - Delete and undo last action
 
-This project is a starting point for a Flutter application.
+Extra features:
+  - Reorder your list
+  - Censor/uncensor account details
+  - Show a focused context menu when right-click is pressed on an account
 
-A few resources to get you started if this is your first Flutter project:
+## How to install
+Download the latest release.zip file and run the .exe
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## TODO
+Improve the installation process
