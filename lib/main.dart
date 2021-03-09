@@ -22,7 +22,7 @@ void main() async {
   var accBox = await Hive.openBox('accounts');
   var editBox = await Hive.openBox('edit');
 
-  //editBox.add(Edit("title", "accName", "pwd", false, 0));
+  if(editBox.length == 0) editBox.add(Edit("title", "accName", "pwd", false, 0, 0xFFBDBDBD));
   //editBox.clear();
   boxList.add(accBox);
   boxList.add(editBox);
