@@ -38,6 +38,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
+    final accountsBox = Hive.box('accounts');
+    for(int i = 0; i < Hive.box('accounts').length; i++) {
+      final acc = accountsBox.getAt(i) as Account;
+      accountsBox.putAt(i, Account(acc.title, acc.name, acc.password, acc.isColored, acc.colorCode, false));
+    }
+
     return FutureBuilder(
       future: Hive.openBox('accounts'),
       builder: (BuildContext context, AsyncSnapshot snapshot) {
