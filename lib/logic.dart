@@ -66,7 +66,7 @@ OutlineInputBorder outlineBorder() {
   );
 }
 
-FocusedMenuItem buildFocusedMenuItem(Widget title, Icon icon, void onPressed(), Color background) {
+FocusedMenuItem buildFocusedMenuItem(Widget title, Icon icon, void onPressed(), [Color background = Colors.white]) {
   return FocusedMenuItem(
     title: title,
     trailingIcon:icon,

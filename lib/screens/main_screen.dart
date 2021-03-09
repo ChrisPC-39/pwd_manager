@@ -229,10 +229,15 @@ class _MainScreenState extends State<MainScreen> {
   List<FocusedMenuItem> _buildFocusedMenuItemList(Account account, int i) {
     return [
       logic.buildFocusedMenuItem(
+        Text(!account.censored ? "Show account details" : "Hide account details", style: logic.textStyle(color: Colors.grey[800], fontSize: 15)),
+        Icon(!account.censored ? Icons.visibility_off_rounded : Icons.visibility_rounded, color: Colors.grey[800]),
+        () { Hive.box('accounts').putAt(i, Account(account.title, account.name, account.password, account.isColored, account.colorCode, !account.censored)); }
+      ),
+
+      logic.buildFocusedMenuItem(
         Text("Edit", style: logic.textStyle(color: Colors.grey[800], fontSize: 15)),
         Icon(Icons.edit_rounded, color: Colors.grey[800]),
-        () { main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode)); },
-        Colors.white
+        () { main.boxList[1].putAt(0, new Edit(account.title, account.name, account.password, true, i, account.colorCode)); }
       ),
 
       logic.buildFocusedMenuItem(
