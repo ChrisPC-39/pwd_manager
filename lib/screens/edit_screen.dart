@@ -3,6 +3,7 @@ import 'package:pwd_manager/database/account.dart';
 import 'package:pwd_manager/database/edit.dart';
 import 'package:hive/hive.dart';
 
+import 'package:pwd_manager/globals.dart';
 import '../logic.dart' as logic;
 import '../main.dart' as main;
 
@@ -57,6 +58,23 @@ class _EditScreenState extends State<EditScreen> {
         _buildColorContainer(Colors.orange[400], 0xFFFFA726, 7),
         _buildColorContainer(Colors.purple[400], 0xFFAB47BC, 8),
         ]
+      )
+    );
+  }
+
+  Widget _buildRandomGeneratorButton() {
+    return Container(
+      height: 52,
+      margin: EdgeInsets.only(left: 5),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(colorCode)),
+      child: TextButton(
+        onPressed: () {
+          widget.pwdController.text = generate.securePassword(generate.randomLength());
+        },
+        child: Padding(
+          padding: EdgeInsets.all(0),
+          child: Icon(Icons.admin_panel_settings_rounded, color: Colors.black)
+        )
       )
     );
   }
@@ -164,6 +182,11 @@ class _EditScreenState extends State<EditScreen> {
                 focusedBorder: _outlineBorder(),
               )
             )
+          ),
+
+          Visibility(
+            visible: findIndividualField(hintText) == 2,
+            child: _buildRandomGeneratorButton()
           ),
 
           MouseRegion(

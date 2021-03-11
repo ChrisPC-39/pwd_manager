@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:pwd_manager/globals.dart';
 import '../database/account.dart';
 import '../logic.dart' as logic;
 
@@ -33,7 +34,25 @@ class _AddScreenState extends State<AddScreen> {
           _buildInput(widget.pwdController, "Password", 2),
           _buildColorPicker()
         ]
-      ),
+      )
+    );
+  }
+
+  Widget _buildRandomGeneratorButton() {
+    return Container(
+      height: 52,
+      margin: EdgeInsets.only(left: 5),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(10), color: Color(colorCode)),
+      child: TextButton(
+        onPressed: () {
+          widget.pwdController.text = generate.securePassword(generate.randomLength());
+        },
+        child: Padding(
+          padding: EdgeInsets.all(0),
+          child: Icon(Icons.admin_panel_settings_rounded, color: Colors.black)
+          //child: Text("Generate", style: logic.textStyle(fontSize: 15, fontWeight: FontWeight.normal)),
+        )
+      )
     );
   }
 
@@ -117,6 +136,11 @@ class _AddScreenState extends State<AddScreen> {
                 hintText: hintText
               )
             )
+          ),
+
+          Visibility(
+            visible: findIndividualField(hintText) == 2,
+            child: _buildRandomGeneratorButton()
           ),
 
           MouseRegion(

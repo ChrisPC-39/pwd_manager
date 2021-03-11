@@ -403,6 +403,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.8"
+  secure_random:
+    dependency: "direct main"
+    description:
+      name: secure_random
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.1"
   shelf:
     dependency: transitive
     description:
