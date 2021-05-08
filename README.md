@@ -17,6 +17,7 @@ Extra features:
 
 ## How to install
 Download the latest release.zip file and run the .exe
+Note: Microsoft Visual Studio must be installed as well!
 
 ## TODO
 Improve the installation process
